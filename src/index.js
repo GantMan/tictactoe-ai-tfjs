@@ -4,6 +4,7 @@ import * as tf from "@tensorflow/tfjs";
 import "./styles.css";
 import { getMoves, getModel, trainOnGames } from "./train";
 
+// TODO: Dis so nasty
 const doPredict = async (myBoard, ttt_model) => {
   const tenseBlock = tf.tensor([myBoard]);
   const result = await ttt_model.predict(tenseBlock);
@@ -21,8 +22,11 @@ const doPredict = async (myBoard, ttt_model) => {
 };
 
 function Square(props) {
+  const visual = props.value
+    ? "square animate__animated animate__flipInX animate__faster"
+    : "square";
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className={visual} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -72,12 +76,12 @@ class Game extends React.Component {
       games: [],
       history: [
         {
-          squares: Array(9).fill(null)
-        }
+          squares: Array(9).fill(null),
+        },
       ],
       stepNumber: 0,
       xIsNext: true,
-      activeModel: getModel()
+      activeModel: getModel(),
     };
   }
 
@@ -92,11 +96,11 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([
         {
-          squares: squares
-        }
+          squares: squares,
+        },
       ]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+      xIsNext: !this.state.xIsNext,
     });
   }
 
@@ -131,7 +135,7 @@ class Game extends React.Component {
   jumpTo(step) {
     this.setState({
       stepNumber: step,
-      xIsNext: step % 2 === 0
+      xIsNext: step % 2 === 0,
     });
   }
 
@@ -188,6 +192,10 @@ class Game extends React.Component {
 
     return (
       <div>
+        <h1 className="animate__animated animate__bounceInDown">
+          AI Trainable Tic Tac Toe
+        </h1>
+
         <div>Games AI has Seen - {this.state.games.length}</div>
         <div className="game">
           <div className="game-board">
@@ -237,7 +245,7 @@ function calculateWinner(squares) {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
