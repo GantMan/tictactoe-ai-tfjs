@@ -1,0 +1,249 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import * as tf from "@tensorflow/tfjs";
+import "./styles.css";
+import { getMoves, getModel, trainOnGames } from "./train";
+
+const doPredict = async (myBoard, ttt_model) => {
+  const tenseBlock = tf.tensor([myBoard]);
+  const result = await ttt_model.predict(tenseBlock);
+
+  const flatty = result.flatten();
+  const maxy = flatty.argMax();
+  const move = await maxy.data();
+  const allMoves = await flatty.data();
+
+  flatty.dispose();
+  tenseBlock.dispose();
+  result.dispose();
+  maxy.dispose();
+  return [move[0], allMoves];
+};
+
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+}
+
+class Board extends React.Component {
+  renderSquare(i) {
+    return (
+      <Square
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
+      />
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="board-row">
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+        </div>
+      </div>
+    );
+  }
+}
+
+class Game extends React.Component {
+  componentWillUnmount() {
+    this.state.activeModel && this.state.activeModel.dispose();
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      games: [],
+      history: [
+        {
+          squares: Array(9).fill(null)
+        }
+      ],
+      stepNumber: 0,
+      xIsNext: true,
+      activeModel: getModel()
+    };
+  }
+
+  handleClick(i) {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? "X" : "O";
+    this.setState({
+      history: history.concat([
+        {
+          squares: squares
+        }
+      ]),
+      stepNumber: history.length,
+      xIsNext: !this.state.xIsNext
+    });
+  }
+
+  async makeAIMove() {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+
+    const AIready = squares.map((v) => {
+      if (v === "X") {
+        return this.state.xIsNext ? 1 : -1;
+      } else if (v === "O") {
+        return this.state.xIsNext ? -1 : 1;
+      } else {
+        return 0;
+      }
+    });
+    // console.log(AIready);
+    let [move, moves] = await doPredict(AIready, this.state.activeModel);
+    // Check if AI made a valid move!
+    while (squares[move] !== null && squares.includes(null)) {
+      console.log(`AI Failed - Spot ${move} - Resorting to next highest`);
+      // Make current move 0
+      moves[move] = 0;
+      move = moves.indexOf(Math.max(...moves));
+      // move = Math.floor(Math.random() * 9);
+    }
+
+    this.handleClick(move);
+  }
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: step % 2 === 0
+    });
+  }
+
+  trainUp(playerLearn) {
+    playerLearn = playerLearn || "O";
+    console.log("Train Called - to be more like ", playerLearn);
+    // console.log(this.state.history);
+    const AllMoves = this.state.history.map((board) => {
+      return board.squares.map((v) => {
+        if (v === playerLearn) {
+          return 1;
+        } else if (v === null) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
+    });
+
+    this.setState(
+      (prevState) => {
+        const games = prevState.games;
+        games.push(getMoves(AllMoves));
+        return { games };
+      },
+      () => {
+        trainOnGames(this.state.games, (newModel) =>
+          this.setState({ activeModel: newModel })
+        );
+      }
+    );
+  }
+
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = calculateWinner(current.squares);
+
+    const moves = history.map((step, move) => {
+      const desc = move ? "Go to move #" + move : "Go to game start";
+      return (
+        <li key={move}>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
+
+    let status;
+    if (winner) {
+      status = "Winner: " + winner;
+    } else {
+      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+    }
+
+    return (
+      <div>
+        <div>Games AI has Seen - {this.state.games.length}</div>
+        <div className="game">
+          <div className="game-board">
+            <Board
+              squares={current.squares}
+              onClick={(i) => this.handleClick(i)}
+            />
+          </div>
+          <div className="game-info">
+            <div>
+              {status} -{" "}
+              {!winner && (
+                <button onClick={() => this.makeAIMove()}>Make AI Move</button>
+              )}
+            </div>
+            <ol>{moves}</ol>
+          </div>
+        </div>
+        <div>
+          {(winner || !current.squares.includes(null)) && (
+            <button onClick={() => this.trainUp("X")}>
+              Train AI to be more like X
+            </button>
+          )}
+          {(winner || !current.squares.includes(null)) && (
+            <button onClick={() => this.trainUp("O")}>
+              Train AI to be more like O
+            </button>
+          )}
+        </div>
+        <div>Tensors in memory = {tf.memory().numTensors}</div>
+      </div>
+    );
+  }
+}
+
+// ========================================
+
+ReactDOM.render(<Game />, document.getElementById("root"));
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
