@@ -215,7 +215,7 @@ class Game extends React.Component {
 
     return (
       <div className="site">
-        <div id="demo-modal" class="modal">
+        <div id="training-modal" class="modal">
           <div class="modal__content">
             <h1>Training...</h1>
           </div>
@@ -254,7 +254,7 @@ class Game extends React.Component {
         <div className="trainSection">
           {(winner || !current.squares.includes(null)) && (
             <a
-              href="#demo-modal"
+              href="#training-modal"
               onClick={() => this.trainUp("X")}
               class="btn effect01 animate__animated animate__fadeIn bigx"
             >
@@ -265,7 +265,7 @@ class Game extends React.Component {
           <br />
           {(winner || !current.squares.includes(null)) && (
             <a
-              href="#demo-modal"
+              href="#training-modal"
               onClick={() => this.trainUp("O")}
               class="btn effect01 animate__animated animate__fadeIn bigo"
             >
