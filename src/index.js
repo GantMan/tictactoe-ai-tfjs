@@ -23,7 +23,7 @@ const doPredict = async (myBoard, ttt_model) => {
 
 function Square(props) {
   const visual = props.value
-    ? "square animate__animated animate__flipInX animate__faster"
+    ? `square animate__animated animate__flipInX animate__faster ${props.glow}`
     : "square";
   return (
     <button className={visual} onClick={props.onClick}>
@@ -34,9 +34,17 @@ function Square(props) {
 
 class Board extends React.Component {
   renderSquare(i) {
+    const squareVal = this.props.squares[i];
+    let glowClass;
+    if (squareVal === "X") {
+      glowClass = "red";
+    } else if (squareVal) {
+      glowClass = "blue";
+    }
     return (
       <Square
-        value={this.props.squares[i]}
+        glow={glowClass}
+        value={squareVal}
         onClick={() => this.props.onClick(i)}
       />
     );
@@ -175,10 +183,12 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? "Go to move #" + move : "Go to game start";
+      const desc = move ? "Move #" + move : "Empty Board";
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <a onClick={() => this.jumpTo(move)} class="btn effect01">
+            <span>{desc}</span>
+          </a>
         </li>
       );
     });
@@ -187,16 +197,15 @@ class Game extends React.Component {
     if (winner) {
       status = "Winner: " + winner;
     } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      status = "";
     }
 
     return (
-      <div>
+      <div className="site">
         <h1 className="animate__animated animate__bounceInDown">
           AI Trainable Tic Tac Toe
         </h1>
 
-        <div>Games AI has Seen - {this.state.games.length}</div>
         <div className="game">
           <div className="game-board">
             <Board
@@ -205,10 +214,17 @@ class Game extends React.Component {
             />
           </div>
           <div className="game-info">
+            <div>AI has learned from {this.state.games.length} game(s)</div>
             <div>
-              {status} -{" "}
+              {status}
               {!winner && (
-                <button onClick={() => this.makeAIMove()}>Make AI Move</button>
+                <a
+                  onClick={() => this.makeAIMove()}
+                  class="btn effect01"
+                  target="_blank"
+                >
+                  <span>Make AI Move</span>
+                </a>
               )}
             </div>
             <ol>{moves}</ol>
@@ -226,7 +242,6 @@ class Game extends React.Component {
             </button>
           )}
         </div>
-        <div>Tensors in memory = {tf.memory().numTensors}</div>
       </div>
     );
   }

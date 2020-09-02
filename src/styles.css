@@ -3,9 +3,25 @@
   text-align: center;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+}
+
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
+  color: #fff;
+  background: linear-gradient(270deg, #8c1c1c, #443e53);
+  background-size: 400% 400%;
+  -webkit-animation: AnimationName 9s ease infinite;
+  -moz-animation: AnimationName 9s ease infinite;
+  animation: AnimationName 9s ease infinite;
+}
+
+h1 {
+  font-family: "Bree Serif", serif;
+  font-size: xx-large;
 }
 
 ol,
@@ -24,7 +40,7 @@ ul {
 }
 
 .square {
-  background: #fff;
+  background: #ffffff22;
   border: 1px solid #999;
   float: left;
   font-size: 65px;
@@ -39,6 +55,16 @@ ul {
   font-family: "Fredoka One", cursive;
 }
 
+.blue {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6,
+    0 0 25px #0073e6, 0 0 30px #0073e6, 0 0 35px #0073e6;
+}
+
+.red {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #f40, 0 0 20px #f40,
+    0 0 25px #f40, 0 0 30px #f40, 0 0 35px #f40;
+}
+
 .square:focus {
   outline: none;
 }
@@ -50,8 +76,86 @@ ul {
 .game {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .game-info {
   margin-left: 20px;
+  min-width: 250px;
+}
+
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 97% 0%;
+  }
+  50% {
+    background-position: 4% 100%;
+  }
+  100% {
+    background-position: 97% 0%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 97% 0%;
+  }
+  50% {
+    background-position: 4% 100%;
+  }
+  100% {
+    background-position: 97% 0%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 97% 0%;
+  }
+  50% {
+    background-position: 4% 100%;
+  }
+  100% {
+    background-position: 97% 0%;
+  }
+}
+
+.btn {
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 45px;
+  max-width: 160px;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  width: 100%;
+}
+.btn:hover {
+  text-decoration: none;
+}
+
+/*btn_background*/
+.effect01 {
+  color: #fff;
+  border: 4px solid #000;
+  box-shadow: 0px 0px 0px 4px #000 inset;
+  background-color: #000;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.effect01:hover {
+  border: 4px solid #666;
+  background-color: #fff;
+  box-shadow: 0px 0px 0px 4px #eee inset;
+}
+
+/*btn_text*/
+.effect01 span {
+  transition: all 0.2s ease-out;
+  z-index: 2;
+}
+.effect01:hover span {
+  letter-spacing: 0.13em;
+  color: #333;
 }
