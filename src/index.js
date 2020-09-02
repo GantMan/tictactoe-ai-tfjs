@@ -141,9 +141,12 @@ class Game extends React.Component {
   }
 
   jumpTo(step) {
+    const progress =
+      step === 0 ? [{ squares: Array(9).fill(null) }] : this.state.history;
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
+      history: progress,
     });
   }
 
@@ -170,9 +173,19 @@ class Game extends React.Component {
         return { games };
       },
       () => {
-        trainOnGames(this.state.games, (newModel) =>
-          this.setState({ activeModel: newModel })
-        );
+        trainOnGames(this.state.games, (newModel) => {
+          window.location.hash = "#";
+          this.setState({
+            activeModel: newModel,
+            stepNumber: 0,
+            xIsNext: true,
+            history: [
+              {
+                squares: Array(9).fill(null),
+              },
+            ],
+          });
+        });
       }
     );
   }
@@ -202,6 +215,11 @@ class Game extends React.Component {
 
     return (
       <div className="site">
+        <div id="demo-modal" class="modal">
+          <div class="modal__content">
+            <h1>Training...</h1>
+          </div>
+        </div>
         <h1 className="animate__animated animate__bounceInDown">
           AI Trainable Tic Tac Toe
         </h1>
@@ -214,7 +232,10 @@ class Game extends React.Component {
             />
           </div>
           <div className="game-info">
-            <div>AI has learned from {this.state.games.length} game(s)</div>
+            <h3>
+              AI has learned from <strong>{this.state.games.length}</strong>{" "}
+              game(s)
+            </h3>
             <div>
               {status}
               {!winner && (
@@ -230,16 +251,26 @@ class Game extends React.Component {
             <ol>{moves}</ol>
           </div>
         </div>
-        <div>
+        <div className="trainSection">
           {(winner || !current.squares.includes(null)) && (
-            <button onClick={() => this.trainUp("X")}>
-              Train AI to be more like X
-            </button>
+            <a
+              href="#demo-modal"
+              onClick={() => this.trainUp("X")}
+              class="btn effect01 animate__animated animate__fadeIn bigx"
+            >
+              <span>Train AI to play like X</span>
+            </a>
           )}
+          <br />
+          <br />
           {(winner || !current.squares.includes(null)) && (
-            <button onClick={() => this.trainUp("O")}>
-              Train AI to be more like O
-            </button>
+            <a
+              href="#demo-modal"
+              onClick={() => this.trainUp("O")}
+              class="btn effect01 animate__animated animate__fadeIn bigo"
+            >
+              <span>Train AI to play like O</span>
+            </a>
           )}
         </div>
       </div>

@@ -21,7 +21,11 @@ body {
 
 h1 {
   font-family: "Bree Serif", serif;
-  font-size: xx-large;
+  font-size: xxx-large;
+}
+
+h3 {
+  font-weight: 300;
 }
 
 ol,
@@ -158,4 +162,73 @@ ul {
 .effect01:hover span {
   letter-spacing: 0.13em;
   color: #333;
+}
+
+.bigx {
+  font-size: x-large;
+  padding: 10px;
+}
+
+.bigx:hover {
+  background-color: #f40;
+}
+
+.bigo {
+  font-size: x-large;
+  padding: 10px;
+}
+
+.bigo:hover {
+  background-color: #0073e6;
+}
+
+.trainSection {
+  text-align: center;
+}
+
+.modal {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(77, 77, 77, 0.7);
+  transition: all 0.4s;
+  z-index: 3;
+}
+.modal:target {
+  visibility: visible;
+  opacity: 1;
+}
+.modal__content {
+  border-radius: 4px;
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+  background: #443e53;
+  padding: 1em 2em;
+  text-align: center;
+  z-index: 5;
+  border: 1px solid;
+}
+.modal__footer {
+  text-align: right;
+}
+.modal__footer a {
+  color: #585858;
+}
+.modal__footer i {
+  color: #d02d2c;
+}
+.modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #585858;
+  text-decoration: none;
 }
