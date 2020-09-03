@@ -134,13 +134,24 @@
     );
 }
 
+.winLine {
+  position: fixed;
+  margin-left: -135px;
+  margin-top: -2px;
+  z-index: 10;
+}
+
+.site {
+  min-width: 570px;
+}
+
 a {
   color: #fff;
   text-decoration: none;
 }
 
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
+  font: 14px 'Century Gothic', Futura, sans-serif;
   margin: 0px;
   color: #fff;
   background: linear-gradient(270deg, #8c1c1c, #443e53);
@@ -151,7 +162,7 @@ body {
 }
 
 h1 {
-  font-family: "Bree Serif", serif;
+  font-family: 'Bree Serif', serif;
   font-size: xxx-large;
 }
 
@@ -166,7 +177,7 @@ ul {
 
 .board-row:after {
   clear: both;
-  content: "";
+  content: '';
   display: table;
 }
 
@@ -187,7 +198,7 @@ ul {
   padding: 0;
   text-align: center;
   width: 100px;
-  font-family: "Fredoka One", cursive;
+  font-family: 'Fredoka One', cursive;
 }
 
 .blue {
