@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import * as tf from "@tensorflow/tfjs";
 import "./styles.css";
 import { getMoves, getModel, trainOnGames } from "./train";
+import { saveAs } from "file-saver";
 
 // TODO: Dis so nasty
 const doPredict = async (myBoard, ttt_model) => {
@@ -119,7 +120,23 @@ class Game extends React.Component {
             >
               <span>Download Current AI Model</span>
             </a>
+            <br />
+            <a
+              onClick={() => {
+                const blob = new Blob(
+                  [`{${JSON.stringify(this.state.games, null, 2)}}`],
+                  {
+                    type: "application/json;charset=utf-8",
+                  }
+                );
+                saveAs(blob, "tictactoe.json");
+              }}
+              class="btn effect01"
+            >
+              <span>Download Past Games Training Data</span>
+            </a>
           </div>
+          <br />
           <div class="modal__footer">
             Made with ♥️ by{" "}
             <a href="https://twitter.com/gantlaborde" target="_blank">
