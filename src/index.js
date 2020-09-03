@@ -93,6 +93,51 @@ class Game extends React.Component {
     };
   }
 
+  about() {
+    return (
+      <div id="about" class="modal">
+        <div class="modal__content">
+          <h1>About</h1>
+          <div>
+            <p className="basic_about">
+              This is an exploratory project that uses a regular neural network
+              to teach AI how to play Tic Tac Toe. The most common method of
+              solving Tic Tac Toe is normally using Q-Learning, but what fun is
+              that?
+            </p>
+            <p>
+              By playing an effective 6 or 7 games you can make a pretty
+              unbeatable AI!
+            </p>
+          </div>
+          <div>
+            <a
+              onClick={() =>
+                this.state.activeModel.save("downloads://ttt_model")
+              }
+              class="btn effect01"
+            >
+              <span>Download Current AI Model</span>
+            </a>
+          </div>
+          <div class="modal__footer">
+            Made with ♥️ by{" "}
+            <a href="https://twitter.com/gantlaborde" target="_blank">
+              @GantLaborde
+            </a>{" "}
+            and{" "}
+            <a href="https://infinite.red" target="_blank">
+              Infinite Red
+            </a>
+          </div>
+          <a href="#" class="modal__close">
+            &times;
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -220,6 +265,7 @@ class Game extends React.Component {
             <h1>Training...</h1>
           </div>
         </div>
+        {this.about()}
         <h1 className="animate__animated animate__bounceInDown">
           AI Trainable Tic Tac Toe
         </h1>
@@ -273,6 +319,13 @@ class Game extends React.Component {
             </a>
           )}
         </div>
+        <div className="footer">
+          <div className="footRoof"></div>
+          <div className="footerContent">&nbsp;</div>
+        </div>
+        <p className="about">
+          <a href="#about">About this project +</a>
+        </p>
       </div>
     );
   }
