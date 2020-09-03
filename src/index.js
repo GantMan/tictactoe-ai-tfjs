@@ -35,10 +35,56 @@ function Square(props) {
 
 const winnerBar = (winner) => {
   if (!winner) return
+  const pad = 20
 
+  // top, mid-across, bottom-across, topleft-br, middle-down, right-down, left down, bottomleft-tr
+  const lines = [
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      x1: `${0 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${300 - pad}`,
+    },
+  ]
   return (
     <svg
-      className="winLine animate_animated animate__bounceIn"
+      className="winLine animate_animated animate__bounceIn animate__slower"
       width="300"
       height="300"
     >
@@ -74,6 +120,7 @@ const winnerBar = (winner) => {
         y1="20"
         x2="280"
         y2="280"
+        stroke-linecap="round"
         stroke="#fffe"
         stroke-width="5"
         style={{ filter: 'url(#dropGlow)' }}
