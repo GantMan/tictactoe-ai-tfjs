@@ -156,9 +156,9 @@ body {
   color: #fff;
   background: linear-gradient(270deg, #8c1c1c, #443e53);
   background-size: 400% 400%;
-  -webkit-animation: AnimationName 9s ease infinite;
+  /* -webkit-animation: AnimationName 9s ease infinite;
   -moz-animation: AnimationName 9s ease infinite;
-  animation: AnimationName 9s ease infinite;
+  animation: AnimationName 9s ease infinite; */
 }
 
 h1 {
@@ -414,4 +414,56 @@ ul {
 
 .about a {
   color: #fffd;
+}
+
+.spinner {
+  margin: 100px auto 0;
+  width: 70px;
+  text-align: center;
+  display: inline;
+}
+
+.spinner > div {
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
 }

@@ -1,42 +1,42 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import * as tf from '@tensorflow/tfjs'
-import './styles.css'
-import { getMoves, getModel, trainOnGames } from './train'
-import { saveAs } from 'file-saver'
+import React from "react";
+import ReactDOM from "react-dom";
+import * as tf from "@tensorflow/tfjs";
+import "./styles.css";
+import { getMoves, getModel, trainOnGames } from "./train";
+import { saveAs } from "file-saver";
 
 // TODO: Dis so nasty
 const doPredict = async (myBoard, ttt_model) => {
-  const tenseBlock = tf.tensor([myBoard])
-  const result = await ttt_model.predict(tenseBlock)
+  const tenseBlock = tf.tensor([myBoard]);
+  const result = await ttt_model.predict(tenseBlock);
 
-  const flatty = result.flatten()
-  const maxy = flatty.argMax()
-  const move = await maxy.data()
-  const allMoves = await flatty.data()
+  const flatty = result.flatten();
+  const maxy = flatty.argMax();
+  const move = await maxy.data();
+  const allMoves = await flatty.data();
 
-  flatty.dispose()
-  tenseBlock.dispose()
-  result.dispose()
-  maxy.dispose()
-  return [move[0], allMoves]
-}
+  flatty.dispose();
+  tenseBlock.dispose();
+  result.dispose();
+  maxy.dispose();
+  return [move[0], allMoves];
+};
 
 function Square(props) {
   const visual = props.value
     ? `square animate__animated animate__flipInX animate__faster ${props.glow}`
-    : 'square'
+    : "square";
   return (
     <button className={visual} onClick={props.onClick}>
       {props.value}
     </button>
-  )
+  );
 }
 
 const winnerBar = (line) => {
-  if (line === null) return
-  const pad = 20
-  const cellSize = 65
+  if (line === null) return;
+  const pad = 20;
+  const cellSize = 65;
 
   const lines = [
     {
@@ -96,7 +96,7 @@ const winnerBar = (line) => {
       x2: `${cellSize * 4 + pad}`,
       y2: `${0 + pad}`,
     },
-  ]
+  ];
   return (
     <svg
       className="winLine animate_animated animate__bounceIn animate__slower"
@@ -137,17 +137,17 @@ const winnerBar = (line) => {
         strokeWidth="5"
       ></line>
     </svg>
-  )
-}
+  );
+};
 
 class Board extends React.Component {
   renderSquare(i) {
-    const squareVal = this.props.squares[i]
-    let glowClass
-    if (squareVal === 'X') {
-      glowClass = 'red'
+    const squareVal = this.props.squares[i];
+    let glowClass;
+    if (squareVal === "X") {
+      glowClass = "red";
     } else if (squareVal) {
-      glowClass = 'blue'
+      glowClass = "blue";
     }
     return (
       <Square
@@ -155,7 +155,7 @@ class Board extends React.Component {
         value={squareVal}
         onClick={() => this.props.onClick(i)}
       />
-    )
+    );
   }
 
   render() {
@@ -177,17 +177,17 @@ class Board extends React.Component {
           {this.renderSquare(8)}
         </div>
       </div>
-    )
+    );
   }
 }
 
 class Game extends React.Component {
   componentWillUnmount() {
-    this.state.activeModel && this.state.activeModel.dispose()
+    this.state.activeModel && this.state.activeModel.dispose();
   }
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       games: [],
       history: [
@@ -198,7 +198,7 @@ class Game extends React.Component {
       stepNumber: 0,
       xIsNext: true,
       activeModel: getModel(),
-    }
+    };
   }
 
   about() {
@@ -221,7 +221,7 @@ class Game extends React.Component {
           <div>
             <a
               onClick={() =>
-                this.state.activeModel.save('downloads://ttt_model')
+                this.state.activeModel.save("downloads://ttt_model")
               }
               className="btn effect01"
             >
@@ -233,10 +233,10 @@ class Game extends React.Component {
                 const blob = new Blob(
                   [`{${JSON.stringify(this.state.games, null, 2)}}`],
                   {
-                    type: 'application/json;charset=utf-8',
+                    type: "application/json;charset=utf-8",
                   }
-                )
-                saveAs(blob, 'tictactoe.json')
+                );
+                saveAs(blob, "tictactoe.json");
               }}
               className="btn effect01"
             >
@@ -245,11 +245,11 @@ class Game extends React.Component {
           </div>
           <br />
           <div className="modal__footer">
-            Made with ♥️ by{' '}
+            Made with ♥️ by{" "}
             <a href="https://twitter.com/gantlaborde" target="_blank">
               @GantLaborde
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a href="https://infinite.red" target="_blank">
               Infinite Red
             </a>
@@ -259,17 +259,17 @@ class Game extends React.Component {
           </a>
         </div>
       </div>
-    )
+    );
   }
 
   handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1)
-    const current = history[history.length - 1]
-    const squares = current.squares.slice()
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
     if (calculateWinner(squares).winner || squares[i]) {
-      return
+      return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O'
+    squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
       history: history.concat([
         {
@@ -278,72 +278,72 @@ class Game extends React.Component {
       ]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
-    })
+    });
   }
 
   async makeAIMove() {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1)
-    const current = history[history.length - 1]
-    const squares = current.squares.slice()
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
 
     const AIready = squares.map((v) => {
-      if (v === 'X') {
-        return this.state.xIsNext ? 1 : -1
-      } else if (v === 'O') {
-        return this.state.xIsNext ? -1 : 1
+      if (v === "X") {
+        return this.state.xIsNext ? 1 : -1;
+      } else if (v === "O") {
+        return this.state.xIsNext ? -1 : 1;
       } else {
-        return 0
+        return 0;
       }
-    })
+    });
     // console.log(AIready);
-    let [move, moves] = await doPredict(AIready, this.state.activeModel)
+    let [move, moves] = await doPredict(AIready, this.state.activeModel);
     // Check if AI made a valid move!
     while (squares[move] !== null && squares.includes(null)) {
-      console.log(`AI Failed - Spot ${move} - Resorting to next highest`)
+      console.log(`AI Failed - Spot ${move} - Resorting to next highest`);
       // Make current move 0
-      moves[move] = 0
-      move = moves.indexOf(Math.max(...moves))
+      moves[move] = 0;
+      move = moves.indexOf(Math.max(...moves));
       // move = Math.floor(Math.random() * 9);
     }
 
-    this.handleClick(move)
+    this.handleClick(move);
   }
 
   jumpTo(step) {
     const progress =
-      step === 0 ? [{ squares: Array(9).fill(null) }] : this.state.history
+      step === 0 ? [{ squares: Array(9).fill(null) }] : this.state.history;
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
       history: progress,
-    })
+    });
   }
 
   trainUp(playerLearn) {
-    playerLearn = playerLearn || 'O'
-    console.log('Train Called - to be more like ', playerLearn)
+    playerLearn = playerLearn || "O";
+    console.log("Train Called - to be more like ", playerLearn);
     // console.log(this.state.history);
     const AllMoves = this.state.history.map((board) => {
       return board.squares.map((v) => {
         if (v === playerLearn) {
-          return 1
+          return 1;
         } else if (v === null) {
-          return 0
+          return 0;
         } else {
-          return -1
+          return -1;
         }
-      })
-    })
+      });
+    });
 
     this.setState(
       (prevState) => {
-        const games = prevState.games
-        games.push(getMoves(AllMoves))
-        return { games }
+        const games = prevState.games;
+        games.push(getMoves(AllMoves));
+        return { games };
       },
       () => {
         trainOnGames(this.state.games, (newModel) => {
-          window.location.hash = '#'
+          window.location.hash = "#";
           this.setState({
             activeModel: newModel,
             stepNumber: 0,
@@ -353,40 +353,47 @@ class Game extends React.Component {
                 squares: Array(9).fill(null),
               },
             ],
-          })
-        })
+          });
+        });
       }
-    )
+    );
   }
 
   render() {
-    const history = this.state.history
-    const current = history[this.state.stepNumber]
-    const { winner, line } = calculateWinner(current.squares)
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const { winner, line } = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? 'Move #' + move : 'Empty Board'
+      const desc = move ? "Move #" + move : "Empty Board";
       return (
         <li key={move}>
           <a onClick={() => this.jumpTo(move)} className="btn effect01">
             <span>{desc}</span>
           </a>
         </li>
-      )
-    })
+      );
+    });
 
-    let status
+    let status;
     if (winner) {
-      status = 'Winner: ' + winner
+      status = "Winner: " + winner;
     } else {
-      status = ''
+      status = "";
     }
 
     return (
       <div className="site">
         <div id="training-modal" className="modal">
           <div className="modal__content">
-            <h1>Training...</h1>
+            <h1>
+              Training
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </h1>
           </div>
         </div>
         {this.about()}
@@ -404,7 +411,7 @@ class Game extends React.Component {
           </div>
           <div className="game-info">
             <h3>
-              AI has learned from <strong>{this.state.games.length}</strong>{' '}
+              AI has learned from <strong>{this.state.games.length}</strong>{" "}
               game(s)
             </h3>
             <div>
@@ -426,7 +433,7 @@ class Game extends React.Component {
           {(winner || !current.squares.includes(null)) && (
             <a
               href="#training-modal"
-              onClick={() => this.trainUp('X')}
+              onClick={() => this.trainUp("X")}
               className="btn effect01 animate__animated animate__fadeIn bigx"
             >
               <span>Train AI to play like X</span>
@@ -437,7 +444,7 @@ class Game extends React.Component {
           {(winner || !current.squares.includes(null)) && (
             <a
               href="#training-modal"
-              onClick={() => this.trainUp('O')}
+              onClick={() => this.trainUp("O")}
               className="btn effect01 animate__animated animate__fadeIn bigo"
             >
               <span>Train AI to play like O</span>
@@ -452,13 +459,13 @@ class Game extends React.Component {
           <a href="#about">About this project +</a>
         </p>
       </div>
-    )
+    );
   }
 }
 
 // ========================================
 
-ReactDOM.render(<Game />, document.getElementById('root'))
+ReactDOM.render(<Game />, document.getElementById("root"));
 
 function calculateWinner(squares) {
   const lines = [
@@ -470,12 +477,12 @@ function calculateWinner(squares) {
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
-  ]
+  ];
   for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i]
+    const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: i }
+      return { winner: squares[a], line: i };
     }
   }
-  return { winner: null, line: null }
+  return { winner: null, line: null };
 }
