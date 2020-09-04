@@ -33,53 +33,68 @@ function Square(props) {
   )
 }
 
-const winnerBar = (winner) => {
-  if (!winner) return
+const winnerBar = (line) => {
+  if (line === null) return
   const pad = 20
+  const cellSize = 65
 
-  // top, mid-across, bottom-across, topleft-br, middle-down, right-down, left down, bottomleft-tr
   const lines = [
     {
+      // top across
+      x1: `${0 + pad}`,
+      y1: `${cellSize / 2 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${cellSize / 2 + pad}`,
+    },
+    {
+      // mid across
+      x1: `${0 + pad}`,
+      y1: `${cellSize * 2 + pad}`,
+      x2: `${300 - pad}`,
+      y2: `${cellSize * 2 + pad}`,
+    },
+    {
+      // bottom across
+      x1: `${0 + pad}`,
+      y1: `${cellSize * 4 - 10}`,
+      x2: `${300 - pad}`,
+      y2: `${cellSize * 4 + -10}`,
+    },
+    {
+      // left down
+      x1: `${cellSize / 2 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${cellSize / 2 + pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      // middle down
+      x1: `${cellSize * 2 + pad}`,
+      y1: `${0 + pad}`,
+      x2: `${cellSize * 2 + pad}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      // right down
+      x1: `${cellSize * 4 - 10}`,
+      y1: `${0 + pad}`,
+      x2: `${cellSize * 4 - 10}`,
+      y2: `${300 - pad}`,
+    },
+    {
+      // top left to bottom right
       x1: `${0 + pad}`,
       y1: `${0 + pad}`,
       x2: `${300 - pad}`,
       y2: `${300 - pad}`,
     },
+
     {
+      // bottom left to top right
       x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
-    },
-    {
-      x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
-    },
-    {
-      x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
-    },
-    {
-      x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
-    },
-    {
-      x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
-    },
-    {
-      x1: `${0 + pad}`,
-      y1: `${0 + pad}`,
-      x2: `${300 - pad}`,
-      y2: `${300 - pad}`,
+      y1: `${cellSize * 4 + pad}`,
+      x2: `${cellSize * 4 + pad}`,
+      y2: `${0 + pad}`,
     },
   ]
   return (
@@ -116,14 +131,10 @@ const winnerBar = (winner) => {
         </filter>
       </defs>
       <line
-        x1="20"
-        y1="20"
-        x2="280"
-        y2="280"
-        stroke-linecap="round"
-        stroke="#fffe"
-        stroke-width="5"
-        style={{ filter: 'url(#dropGlow)' }}
+        {...lines[line]}
+        strokeLinecap="round"
+        stroke="#fffd"
+        strokeWidth="5"
       ></line>
     </svg>
   )
@@ -192,8 +203,8 @@ class Game extends React.Component {
 
   about() {
     return (
-      <div id="about" class="modal">
-        <div class="modal__content">
+      <div id="about" className="modal">
+        <div className="modal__content">
           <h1>About</h1>
           <div>
             <p className="basic_about">
@@ -212,7 +223,7 @@ class Game extends React.Component {
               onClick={() =>
                 this.state.activeModel.save('downloads://ttt_model')
               }
-              class="btn effect01"
+              className="btn effect01"
             >
               <span>Download Current AI Model</span>
             </a>
@@ -227,13 +238,13 @@ class Game extends React.Component {
                 )
                 saveAs(blob, 'tictactoe.json')
               }}
-              class="btn effect01"
+              className="btn effect01"
             >
               <span>Download Past Games Training Data</span>
             </a>
           </div>
           <br />
-          <div class="modal__footer">
+          <div className="modal__footer">
             Made with ♥️ by{' '}
             <a href="https://twitter.com/gantlaborde" target="_blank">
               @GantLaborde
@@ -243,7 +254,7 @@ class Game extends React.Component {
               Infinite Red
             </a>
           </div>
-          <a href="#" class="modal__close">
+          <a href="#" className="modal__close">
             &times;
           </a>
         </div>
@@ -255,7 +266,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares).winner || squares[i]) {
       return
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O'
@@ -351,13 +362,13 @@ class Game extends React.Component {
   render() {
     const history = this.state.history
     const current = history[this.state.stepNumber]
-    const winner = calculateWinner(current.squares)
+    const { winner, line } = calculateWinner(current.squares)
 
     const moves = history.map((step, move) => {
       const desc = move ? 'Move #' + move : 'Empty Board'
       return (
         <li key={move}>
-          <a onClick={() => this.jumpTo(move)} class="btn effect01">
+          <a onClick={() => this.jumpTo(move)} className="btn effect01">
             <span>{desc}</span>
           </a>
         </li>
@@ -373,8 +384,8 @@ class Game extends React.Component {
 
     return (
       <div className="site">
-        <div id="training-modal" class="modal">
-          <div class="modal__content">
+        <div id="training-modal" className="modal">
+          <div className="modal__content">
             <h1>Training...</h1>
           </div>
         </div>
@@ -384,7 +395,7 @@ class Game extends React.Component {
         </h1>
 
         <div className="game">
-          {winnerBar(winner)}
+          {winnerBar(line)}
           <div className="game-board">
             <Board
               squares={current.squares}
@@ -401,7 +412,7 @@ class Game extends React.Component {
               {!winner && (
                 <a
                   onClick={() => this.makeAIMove()}
-                  class="btn effect01"
+                  className="btn effect01"
                   target="_blank"
                 >
                   <span>Make AI Move</span>
@@ -416,7 +427,7 @@ class Game extends React.Component {
             <a
               href="#training-modal"
               onClick={() => this.trainUp('X')}
-              class="btn effect01 animate__animated animate__fadeIn bigx"
+              className="btn effect01 animate__animated animate__fadeIn bigx"
             >
               <span>Train AI to play like X</span>
             </a>
@@ -427,7 +438,7 @@ class Game extends React.Component {
             <a
               href="#training-modal"
               onClick={() => this.trainUp('O')}
-              class="btn effect01 animate__animated animate__fadeIn bigo"
+              className="btn effect01 animate__animated animate__fadeIn bigo"
             >
               <span>Train AI to play like O</span>
             </a>
@@ -463,8 +474,8 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a]
+      return { winner: squares[a], line: i }
     }
   }
-  return null
+  return { winner: null, line: null }
 }
