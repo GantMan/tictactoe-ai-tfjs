@@ -4,6 +4,6 @@ Tic Tac Toe TFJS with simple Neural Networks.
 
 ### Watch the video
 
-[https://youtu.be/1zdHZvRbHwE](![Tic Tac Toe GIF](_art/quick-tac-toe.gif))
+[![Tic Tac Toe GIF](_art/quick-tac-toe.gif)](https://youtu.be/1zdHZvRbHwE)
 
-Try it for yourself: https://www.tensorflowtictactoe.co/
+And try it for yourself: https://www.tensorflowtictactoe.co/
