@@ -246,11 +246,19 @@ class Game extends React.Component {
           <br />
           <div className="modal__footer">
             Made with ♥️ by{" "}
-            <a href="https://twitter.com/gantlaborde" target="_blank">
+            <a
+              href="https://twitter.com/gantlaborde"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               @GantLaborde
             </a>{" "}
             and{" "}
-            <a href="https://infinite.red" target="_blank">
+            <a
+              href="https://infinite.red"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               Infinite Red
             </a>
           </div>
@@ -454,6 +462,22 @@ class Game extends React.Component {
         <div className="footer">
           <div className="footRoof"></div>
           <div className="footerContent">&nbsp;</div>
+        </div>
+        <div className="links">
+          <a
+            href="https://github.com/GantMan/tictactoe-ai-tfjs"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="github.png" alt="github icon" />
+          </a>
+          <a
+            href="https://youtu.be/1zdHZvRbHwE"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="youtube.png" alt="youtube icon" />
+          </a>
         </div>
         <p className="about">
           <a href="#about">About this project +</a>

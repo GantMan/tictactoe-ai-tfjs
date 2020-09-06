@@ -156,9 +156,9 @@ body {
   color: #fff;
   background: linear-gradient(270deg, #8c1c1c, #443e53);
   background-size: 400% 400%;
-  -webkit-animation: AnimationName 9s ease infinite;
+  /* -webkit-animation: AnimationName 9s ease infinite;
   -moz-animation: AnimationName 9s ease infinite;
-  animation: AnimationName 9s ease infinite;
+  animation: AnimationName 9s ease infinite; */
 }
 
 h1 {
@@ -414,6 +414,19 @@ ul {
 
 .about a {
   color: #fffd;
+}
+
+.links {
+  position: fixed;
+  left: 5px;
+  bottom: 0;
+}
+
+.links img {
+  padding: 10px;
+  width: 25px;
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 .spinner {
