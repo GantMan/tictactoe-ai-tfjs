@@ -103,33 +103,6 @@ const winnerBar = (line) => {
       width="300"
       height="300"
     >
-      <defs>
-        <filter id="dropGlow" width="2.5" height="2.5" x="-.15" y="-.15">
-          <feGaussianBlur
-            id="feGaussianBlur5384"
-            in="SourceAlpha"
-            stdDeviation="15.000000"
-            result="blur"
-          />
-          <feColorMatrix
-            id="feColorMatrix5386"
-            result="bluralpha"
-            type="matrix"
-            values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 0.800000 0 "
-          />
-          <feOffset
-            id="feOffset5388"
-            in="bluralpha"
-            dx="0.000000"
-            dy="0.000000"
-            result="offsetBlur"
-          />
-          <feMerge id="feMerge5390">
-            <feMergeNode id="feMergeNode5392" in="offsetBlur" />
-            <feMergeNode id="feMergeNode5394" in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
       <line
         {...lines[line]}
         strokeLinecap="round"
@@ -231,7 +204,14 @@ class Game extends React.Component {
             <a
               onClick={() => {
                 const blob = new Blob(
-                  [`{${JSON.stringify(this.state.games, null, 2)}}`],
+                  [
+                    `
+{
+  "createdWith": "https://www.tensorflowtictactoe.co/",
+  "creationDate": "${new Date().toISOString().split("T")[0]}",
+  "games": ${JSON.stringify(this.state.games, null, 2)}
+}`,
+                  ],
                   {
                     type: "application/json;charset=utf-8",
                   }
